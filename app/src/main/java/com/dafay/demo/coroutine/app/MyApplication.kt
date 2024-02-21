@@ -1,9 +1,9 @@
 package com.dafay.demo.coroutine.app
 
 import android.app.Application
-import com.dafay.demo.coroutine.data.Constants
+import com.dafay.demo.coroutine.data.ConfigC
 import com.dafay.demo.coroutine.data.http.CommonInterceptor
-import com.example.demo.lib.net.HttpConfigManager
+import com.example.demo.lib.net.HttpConfig
 
 /**
  * @Des
@@ -17,10 +17,10 @@ class MyApplication : Application() {
     }
 
     private fun initHttpConfig() {
-        val config = HttpConfigManager.Config.build {
-            this.baseUrl = Constants.PEXELS_BASE_URL
+        val config = HttpConfig.Config.build {
+            this.baseUrl = ConfigC.PEXELS_BASE_URL
             this.addInterceptor(CommonInterceptor())
         }
-        HttpConfigManager.initConfig(config)
+        HttpConfig.initConfig(config)
     }
 }

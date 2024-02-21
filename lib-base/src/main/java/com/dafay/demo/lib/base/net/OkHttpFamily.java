@@ -1,9 +1,9 @@
-package com.dafay.demo.lib.base.net.rx;
+package com.dafay.demo.lib.base.net;
 
 
 import android.util.Log;
 
-import com.example.demo.lib.net.HttpConfigManager;
+import com.example.demo.lib.net.HttpConfig;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,16 +32,14 @@ public class OkHttpFamily {
                 if (null == API) {
                     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
                     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                    // 云边请求调用鉴权
                     OkHttpClient.Builder builder = new OkHttpClient.Builder();
                     builder.connectTimeout(15L, TimeUnit.SECONDS)
                             .writeTimeout(15L, TimeUnit.SECONDS)
                             .readTimeout(15L, TimeUnit.SECONDS);
-
                     builder.addInterceptor(logging);
-                    for (Interceptor interceptor : HttpConfigManager.INSTANCE.getConfig().getInterceptors()) {
+                    for (Interceptor interceptor : HttpConfig.INSTANCE.getConfig().getInterceptors()) {
                         builder.addInterceptor(interceptor);
-                        Log.w(TAG, "addInterceptor" + interceptor.getClass().getSimpleName());
+                        Log.i(TAG, "addInterceptor" + interceptor.getClass().getSimpleName());
                     }
                     API = builder.build();
                 }
@@ -49,6 +47,4 @@ public class OkHttpFamily {
         }
         return API;
     }
-
-
 }

@@ -1,13 +1,13 @@
-package com.dafay.demo.coroutine.pages
+package com.dafay.demo.coroutine.pages.test_coroutine
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dafay.demo.coroutine.data.http.PexelsApi
 import com.dafay.demo.coroutine.data.model.Photo
-import com.dafay.demo.lib.base.net.rx.RetrofitManager
-import com.dafay.demo.lib.base.ui.BaseViewModel
+import com.dafay.demo.lib.base.net.Result
+import com.dafay.demo.lib.base.net.safeApiCall
+import com.dafay.demo.lib.base.net.RetrofitFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -23,7 +23,7 @@ class CoroutinePhotosViewModel : ViewModel() {
     fun queryPhotos() {
         viewModelScope.launch {
             val result = safeApiCall(Dispatchers.IO) {
-                RetrofitManager.createService(PexelsApi::class.java).queryPhotos("art", 1, 10)
+                RetrofitFamily.createService(PexelsApi::class.java).queryPhotos("art", 1, 10)
             }
             if (result is Result.Success) {
                 val photos = result.value

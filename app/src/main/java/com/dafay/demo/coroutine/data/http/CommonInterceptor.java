@@ -1,6 +1,8 @@
 package com.dafay.demo.coroutine.data.http;
 
 
+import com.dafay.demo.coroutine.data.ConfigC;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -16,9 +18,8 @@ public class CommonInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request oldRequest = chain.request();
-        // 新的请求
         Request newRequest = oldRequest.newBuilder()
-                .header("Authorization","8eVgQuHb9ZlBOc5myqCzzR9pHtEkA3Et23INb5drFjHfER0nD0OZIk18")
+                .header("Authorization", ConfigC.PEXELS_KEY)
                 .method(oldRequest.method(), oldRequest.body())
                 .build();
         return chain.proceed(newRequest);

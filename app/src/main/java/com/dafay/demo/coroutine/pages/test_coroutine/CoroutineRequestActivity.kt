@@ -1,25 +1,19 @@
-package com.dafay.demo.coroutine.pages
+package com.dafay.demo.coroutine.pages.test_coroutine
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import androidx.viewbinding.ViewBinding
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dafay.demo.coroutine.R
-import com.dafay.demo.coroutine.databinding.ActivityMainBinding
-import com.dafay.demo.coroutine.databinding.ActivityRxJavaRequestBinding
+import com.dafay.demo.coroutine.databinding.ActivityCoroutineRequestBinding
 import com.dafay.demo.coroutine.pages.adapter.PhotoAdapter
 import com.dafay.demo.lib.base.ui.base.BaseActivity
 import com.dafay.demo.lib.base.utils.dp2px
 import com.example.demo.biz.base.widgets.GridMarginDecoration
 
-class RxJavaRequestActivity : BaseActivity(R.layout.activity_rx_java_request) {
-    override val binding: ActivityRxJavaRequestBinding by viewBinding()
-    private val viewModel by lazy { ViewModelProvider(this).get(SearchViewModel::class.java) }
+class CoroutineRequestActivity : BaseActivity(R.layout.activity_coroutine_request) {
+    override val binding: ActivityCoroutineRequestBinding by viewBinding()
+    private val viewModel by lazy { ViewModelProvider(this).get(CoroutinePhotosViewModel::class.java) }
 
     private lateinit var photoAdapter: PhotoAdapter
     override fun initViews() {
@@ -43,6 +37,7 @@ class RxJavaRequestActivity : BaseActivity(R.layout.activity_rx_java_request) {
 
     override fun initializeData() {
         super.initializeData()
-        viewModel.refreshPhotos()
+        viewModel.queryPhotos()
     }
+
 }
