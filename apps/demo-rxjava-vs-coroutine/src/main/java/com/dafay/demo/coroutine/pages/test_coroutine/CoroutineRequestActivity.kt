@@ -56,7 +56,23 @@ class CoroutineRequestActivity : BaseActivity(R.layout.activity_coroutine_reques
 
     override fun initializeData() {
         super.initializeData()
-        viewModel.searchPhotos()
-    }
+//        viewModel.searchPhotos()
+        viewModel.searchPhotosWithLD().observe(this){
+            when (it) {
+                is Result.Loading -> {
+                    showLoading()
+                }
 
+                is Result.Success -> {
+                    hideLoading()
+                    photoAdapter.setDatas(it.value)
+                }
+
+                is Result.Error, Result.NetworkError -> {
+                    hideLoading()
+                    toast("error")
+                }
+            }
+        }
+    }
 }

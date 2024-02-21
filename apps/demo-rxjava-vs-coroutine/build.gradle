@@ -50,6 +50,7 @@ dependencies {
 
     api 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
     api 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.7.0'
 
     implementation project(':lib-base')
 }
