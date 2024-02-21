@@ -14,5 +14,8 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "demo-coroutine"
-include ':app'
+// apps
+include ':apps:demo-rxjava-vs-coroutine'
+
+
 include ':lib-base'

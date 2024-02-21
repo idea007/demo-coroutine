@@ -18,7 +18,7 @@ import com.example.demo.biz.base.widgets.GridMarginDecoration
 
 class RxJavaRequestActivity : BaseActivity(R.layout.activity_rx_java_request) {
     override val binding: ActivityRxJavaRequestBinding by viewBinding()
-    private val viewModel by lazy { ViewModelProvider(this).get(SearchViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this).get(RPhotosViewModel::class.java) }
 
     private lateinit var photoAdapter: PhotoAdapter
     override fun initViews() {
@@ -57,6 +57,6 @@ class RxJavaRequestActivity : BaseActivity(R.layout.activity_rx_java_request) {
 
     override fun initializeData() {
         super.initializeData()
-        viewModel.refreshPhotos()
+        viewModel.searchPhotos()
     }
 }

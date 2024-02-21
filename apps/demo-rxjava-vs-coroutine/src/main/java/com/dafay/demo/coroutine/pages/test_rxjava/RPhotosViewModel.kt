@@ -17,9 +17,9 @@ import io.reactivex.schedulers.Schedulers
  * @Author lipengfei
  * @Date 2023/11/27 18:50
  */
-class SearchViewModel : BaseViewModel() {
+class RPhotosViewModel : BaseViewModel() {
     val photosLiveData = MutableLiveData<Result<List<Photo>>>()
-    fun refreshPhotos() {
+    fun searchPhotos() {
         if (photosLiveData.value is Result.Loading) {
             return
         }

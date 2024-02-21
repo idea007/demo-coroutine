@@ -26,6 +26,6 @@
         android:id="@+id/mb_coroutine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="test rxjava request" />
+        android:text="test coroutine request" />
 
 </LinearLayout>

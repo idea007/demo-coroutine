@@ -9,7 +9,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.dafay.demo.coroutine"
+        applicationId "com.dafay.demo.rxjava.vs.coroutine"
         minSdk 21
         targetSdk 34
         versionCode 1
