@@ -5,6 +5,18 @@
       <entry key="app">
         <State />
       </entry>
+      <entry key="apps.app">
+        <State />
+      </entry>
+      <entry key="apps.demo-rxjava-vs-coroutine">
+        <State />
+      </entry>
+      <entry key="test_coroutine()">
+        <State />
+      </entry>
+      <entry key="test_coroutine_sort()">
+        <State />
+      </entry>
     </value>
   </component>
 </project>

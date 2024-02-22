@@ -28,4 +28,15 @@
         android:layout_height="wrap_content"
         android:text="test coroutine request" />
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="80dp" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mb_test_coroutine"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test coroutine exec" />
+
 </LinearLayout>
