@@ -3,7 +3,7 @@ package com.example.demo.lib.net
 import okhttp3.Interceptor
 
 /**
- * @Des 网络请求配置
+ * @Des 请求配置统一管理
  * @Author lipengfei
  * @Date 2023/11/27 18:06
  */
@@ -15,9 +15,6 @@ object HttpConfig {
         this.config = config
     }
 
-    /*
-     * 配置信息，私有化构造函数
-     */
     class Config private constructor(val baseUrl: String, val interceptors: ArrayList<Interceptor>) {
         companion object {
             inline fun build(block: Builder.() -> Unit) = Builder().apply(block).build()

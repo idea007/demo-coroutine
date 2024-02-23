@@ -10,10 +10,10 @@ import java.io.IOException
  * @param T
  */
 sealed class Result<out T> {
-    data class Success<out T>(val value: T): Result<T>()
-    data class Error(val code: Int? = null, val error: String? = null): Result<Nothing>()
-    object Loading: Result<Nothing>()
-    object NetworkError: Result<Nothing>()
+    data class Success<out T>(val value: T) : Result<T>()
+    data class Error(val code: Int? = null, val error: String? = null) : Result<Nothing>()
+    object Loading : Result<Nothing>()
+    object NetworkError : Result<Nothing>()
 }
 
 suspend fun <T> safeApiCall(
@@ -28,18 +28,12 @@ suspend fun <T> safeApiCall(
                 is IOException -> Result.NetworkError
                 is HttpException -> {
                     val code = throwable.code()
-                    val errorResponse = throwable.errorBody
+                    val errorResponse = throwable.response()?.errorBody()?.string()
                     Result.Error(code, errorResponse)
                 }
+
                 else -> Result.Error(null, throwable.message)
             }
         }
     }
 }
-
-private val HttpException.errorBody: String?
-    get() = try {
-        this.response()?.errorBody()?.string()
-    } catch (exception: Exception) {
-        null
-    }

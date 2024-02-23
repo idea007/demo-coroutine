@@ -2,22 +2,17 @@ package com.dafay.demo.lib.base.net;
 
 
 import android.util.Log;
-
 import com.example.demo.lib.net.HttpConfig;
-
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
 
 /**
- * @description:
- * @Author: lipengfei
- * @Date: 2023/3/7
- * @Last Modified by: lipengfei
- * @Last Modified time: 2023/3/7
+ * @Des OkHttp 配置
+ * @Author lipengfei
+ * @Date 2023/11/27 18:06
  */
 public class OkHttpFamily {
     private static final String TAG = OkHttpFamily.class.getSimpleName();

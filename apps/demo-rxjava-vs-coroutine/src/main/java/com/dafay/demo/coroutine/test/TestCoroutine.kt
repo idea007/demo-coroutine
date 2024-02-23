@@ -1,12 +1,15 @@
 package com.dafay.demo.coroutine.test
 
+import com.dafay.demo.coroutine.data.http.PexelsApi
+import com.dafay.demo.lib.base.net.RetrofitFamily
 import com.dafay.demo.lib.base.utils.debug
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -21,97 +24,8 @@ import kotlin.coroutines.CoroutineContext
  */
 object TestCoroutine {
 
-    val myCoroutineScope = object : CoroutineScope {
-        override val coroutineContext: CoroutineContext
-            get() = TODO("Not yet implemented")
-
-    }
-
-    private fun test_coroutine() {
-        debug("before")
-        runBlocking(Dispatchers.IO) { // MainScope 协程作用域
-            val deferred = async { // 在后台启动一个新的协程并继续
-                delay(1000L) // 非阻塞的等待 1 秒钟（默认时间单位是毫秒）
-                return@async "Hello, World!"
-            }
-            debug("Waiting for result...") // 协程已在等待时主线程还在继续
-            debug(deferred.await())
-        }
-        debug("after")
-    }
-
-    private fun test_coroutine_5() {
-        debug("before")
-        MainScope().launch { // MainScope 协程作用域
-            val deferred = async { // 在后台启动一个新的协程并继续
-                delay(1000L) // 非阻塞的等待 1 秒钟（默认时间单位是毫秒）
-                return@async "Hello, World!"
-            }
-            debug("Waiting for result...") // 协程已在等待时主线程还在继续
-            debug(deferred.await())
-        }
-        debug("after")
-    }
-
-    private fun test_coroutine_4() {
-        debug("before")
-        runBlocking { // 这里的 runBlocking 创建一个新的协程作用域
-            val job = launch { // 在后台启动一个新的协程并继续
-                delay(1000L) // 非阻塞的等待 1 秒钟（默认时间单位是毫秒）
-                debug("World!")
-            }
-            debug("Hello,") // 协程已在等待时主线程还在继续
-            job.join() // 等待直到子协程执行结束
-        }
-        debug("after")
-    }
 
 
-    private fun test_coroutine_3() {
-        debug("before")
-        runBlocking(Dispatchers.IO) {
-            debug("twoRequestFetch start")
-            val slow = twoRequestFetch()
-            debug("twoRequestFetch end ${slow}")
-        }
-        debug("after")
-    }
-
-    /**
-     * 测试异常
-     */
-    private fun test_coroutine_2() {
-        debug("before")
-        MainScope().launch {
-            debug("fetchWithCrash start")
-            val slow = fetchDataCrash()
-            debug("fetchWithCrash end ${slow}")
-        }
-        debug("after")
-    }
-
-    /**
-     * 执行顺序
-     */
-    private fun test_coroutine_1() {
-        debug("before")
-        MainScope().launch {
-            debug("firstFetch start")
-            val slow = fetchPage1()
-            debug("firstFetch end ${slow}")
-        }
-        debug("after")
-    }
-
-    /**
-     * 两个请求顺序执行
-     */
-    suspend fun twoRequestFetch() =
-        withContext(Dispatchers.IO) {
-            val slow = fetchPage1()
-            val another = fetchPage2()
-            return@withContext slow + another
-        }
 
     fun testAsync() {
         debug("before")
@@ -136,44 +50,79 @@ object TestCoroutine {
         debug("end")
     }
 
-    /**
-     * launch{} CoroutineScope的扩展方法，启动一个协程，不阻塞当前协程，并返回新协程的Job。
-     */
-    fun testLaunch() {
-        debug("before")
-        val job = GlobalScope.launch {
-            val slow = fetchPage1()
-            debug("fetchPage1 result:${slow}")
+    fun testLaunch1() {
+        GlobalScope.launch() {
+
+            withContext(Dispatchers.IO) {
+                debug("获取数据...")
+                delay(2000)
+                debug("获取数据结束")
+            }
+
+            coroutineScope {
+                debug("获取数据...")
+                delay(2000)
+                debug("获取数据结束")
+            }
         }
-        debug("end")
+    }
+
+    fun testLaunch() {
+        // launch: 在不阻塞当前线程的情况下启动新的协程，并将对协程的引用作为作业返回。当生成的作业被取消时，协程将被取消。
+        GlobalScope.launch(Dispatchers.Default) {
+            mockQueryPhotos(1)
+        }
+
+        // runBlocking: 运行新的协程，并可中断地阻塞当前线程，直到其完成。不应从协程中使用此函数。它旨在将常规阻塞代码桥接到以挂起方式编写的库，用于主函数和测试
+        runBlocking(Dispatchers.IO) {
+            mockQueryPhotos(2)
+        }
+
+        GlobalScope.launch(CoroutineName("MyCoroutine")) {
+            debug("current coroutineName=${coroutineContext[CoroutineName]}")
+            // 使用给定的协程上下文调用指定的挂起块，挂起直到完成，然后返回结果
+            // 它并不启动协程，只会(可能会)导致线程的切换。用它执行的挂起块中的上下文是当前协程的上下文和由它执行的上下文的合并结果。 withContext的目的不在于启动子协程，它最初用于将长耗时操作从UI线程切走，完事再切回来。
+            withContext(Dispatchers.IO) {
+                mockQueryPhotos(3)
+            }
+            // 一个suspend方法，创建一个新的作用域，并在该作用域内执行指定代码块，它并不启动协程。其存在的目的是进行符合结构化并发的并行分解（即，将长耗时任务拆分为并发的多个短耗时任务，并等待所有并发任务完成后再返回）。
+            coroutineScope {
+                mockQueryPhotos(4)
+            }
+        }
     }
 
 
     /**
-     * 模拟耗时操作
+     * 模拟网络请求操作
      */
-    private suspend fun fetchPage1(): String {
-        debug("exec fetchPage1 ...")
-        delay(2000)
-        return "page 1 data"
+    private suspend fun mockQueryPhotos(page: Int): String {
+        debug("queryPhotos start page=${page}")
+        delay(2000L)
+        val result = RetrofitFamily.createService(PexelsApi::class.java).queryPhotos("art", page, 10)
+        val str = "queryPhotos success:page=${page} photos.size=${result.photos.size}"
+        debug(str)
+        return str
     }
 
     /**
-     * 模拟耗时操作
+     * 模拟网络请求异常
      */
-    private suspend fun fetchPage2(): String {
-        debug("exec fetchPage2 ...")
-        delay(2000)
-        return "page 2 data"
+    private suspend fun mockQueryPhotosCrash(page: Int): String {
+        debug("queryPhotos start page=${page}")
+        val result = RetrofitFamily.createService(PexelsApi::class.java).queryPhotos("art", page, 10)
+        throw RuntimeException("queryPhotos Crash")
     }
 
     /**
-     * 模拟耗时操作异常
+     * 模拟网络请求异常
      */
-    private suspend fun fetchDataCrash(): String {
-        debug("exec fetchDataCrash ...")
-        delay(2000)
-        throw RuntimeException("fetchDataCrash")
+    private suspend fun mockQueryPhotosFail(page: Int): String {
+        debug("queryPhotos start page=${page}")
+        val result = RetrofitFamily.createService(PexelsApi::class.java).queryPhotosError("art", page, 10)
+        val str = "queryPhotos success:page=${page} photos.size=${result.photos.size}"
+        debug(str)
+        return str
     }
 
 }

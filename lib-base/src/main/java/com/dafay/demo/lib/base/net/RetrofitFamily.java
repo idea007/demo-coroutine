@@ -12,16 +12,14 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * @description:
- * @Author: lipengfei
- * @Date: 2023/3/7
- * @Last Modified by: lipengfei
- * @Last Modified time: 2023/3/7
+ * @Des Retrofit 配置 [单例]
+ * @Author lipengfei
+ * @Date 2023/11/27 18:06
  */
 public class RetrofitFamily {
 
     private static Retrofit retrofit;
-
+    // 使用 map 缓存已存在的
     private static final Map<Class<?>, Object> SERVICE_MAP = new ConcurrentHashMap<>();
 
     private RetrofitFamily() {

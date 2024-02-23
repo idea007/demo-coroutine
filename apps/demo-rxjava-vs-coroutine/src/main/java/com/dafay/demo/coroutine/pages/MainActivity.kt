@@ -8,6 +8,7 @@ import com.dafay.demo.coroutine.databinding.ActivityMainBinding
 import com.dafay.demo.coroutine.pages.test_coroutine.CoroutineRequestActivity
 import com.dafay.demo.coroutine.pages.test_rxjava.RxJavaRequestActivity
 import com.dafay.demo.coroutine.test.TestCoroutine
+import com.dafay.demo.coroutine.test.TestRxJava
 import com.dafay.demo.lib.base.ui.base.BaseActivity
 import com.dafay.demo.lib.base.utils.debug
 import kotlinx.coroutines.CoroutineScope
@@ -40,9 +41,11 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
         binding.mbTestCoroutine.setOnClickListener {
             TestCoroutine.testLaunch()
         }
+
+        binding.mbTestRxjava.setOnClickListener {
+            TestRxJava.test()
+        }
     }
-
-
 
 
 }

@@ -29,4 +29,11 @@ interface PexelsApi {
     ): PagePhotos
 
 
+    @GET("/v1/xxxxxx")
+    suspend fun queryPhotosError(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") per_page: Int,
+    ): PagePhotos
+
 }

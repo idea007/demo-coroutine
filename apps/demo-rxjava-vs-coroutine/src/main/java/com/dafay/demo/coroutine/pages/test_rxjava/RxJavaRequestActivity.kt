@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.dafay.demo.coroutine.R
 import com.dafay.demo.coroutine.databinding.ActivityRxJavaRequestBinding
-import com.dafay.demo.lib.base.net.Result
 import com.dafay.demo.coroutine.pages.adapter.PhotoAdapter
+import com.dafay.demo.lib.base.net.Result
 import com.dafay.demo.lib.base.ui.base.BaseActivity
 import com.dafay.demo.lib.base.utils.dp2px
 import com.dafay.demo.lib.base.utils.hideLoading
@@ -51,7 +51,6 @@ class RxJavaRequestActivity : BaseActivity(R.layout.activity_rx_java_request) {
                     toast("error")
                 }
             }
-
         }
     }
 
