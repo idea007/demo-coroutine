@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/apps" />
+            <option value="$PROJECT_DIR$/apps/demo-koin" />
             <option value="$PROJECT_DIR$/apps/demo-rxjava-vs-coroutine" />
             <option value="$PROJECT_DIR$/lib-base" />
           </set>

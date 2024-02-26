@@ -1,4 +1,4 @@
-package com.dafay.demo.coroutine.app
+package com.dafay.demo.coroutine.application
 
 import android.app.Application
 import com.dafay.demo.coroutine.data.ConfigC

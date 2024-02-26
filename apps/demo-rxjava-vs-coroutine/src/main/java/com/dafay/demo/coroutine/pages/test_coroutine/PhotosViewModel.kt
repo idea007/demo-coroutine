@@ -13,7 +13,7 @@ import com.dafay.demo.lib.base.net.Result
  * @Author lipengfei
  * @Date 2024/2/20
  */
-class CPhotosViewModel(private val photosRepository: PhotosRepository) : ViewModel() {
+class PhotosViewModel(private val photosRepository: PhotosRepository) : ViewModel() {
 
     val photosLiveData = MutableLiveData<Result<List<Photo>>>()
 

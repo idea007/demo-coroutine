@@ -22,6 +22,14 @@ private fun appendPrefix(message: String): String {
     return PREFIX + "[${Thread.currentThread().name}](${findClassNameAndLine()}) " + message
 }
 
+fun Any.println(message: String) {
+    kotlin.io.println(appendPrefix(message))
+}
+
+fun Any.println(tr: Throwable) {
+    kotlin.io.println(appendPrefix(tr.toString()))
+}
+
 fun Any.debug(message: String) {
     Log.d(this::class.java.simpleName, appendPrefix(message))
 }

@@ -3,7 +3,6 @@ package com.dafay.demo.coroutine.data.http
 import com.dafay.demo.coroutine.data.model.PagePhotos
 import io.reactivex.Observable
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 /**

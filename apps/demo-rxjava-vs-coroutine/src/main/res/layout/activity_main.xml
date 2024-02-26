@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingHorizontal="16dp"
-    tools:context=".pages.MainActivity">
+    tools:context=".pages.main.MainActivity">
 
     <Space
         android:layout_width="match_parent"
@@ -32,21 +32,5 @@
         android:layout_width="match_parent"
         android:layout_height="80dp" />
 
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mb_test_coroutine"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test coroutine exec" />
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/mb_test_rxjava"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="test rxjava exec" />
 
 </LinearLayout>

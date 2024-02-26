@@ -1,11 +1,7 @@
 package com.dafay.demo.coroutine
 
-import androidx.annotation.WorkerThread
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 import org.junit.Test
 import org.junit.runner.RunWith

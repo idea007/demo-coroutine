@@ -17,7 +17,7 @@ import com.example.demo.biz.base.widgets.GridMarginDecoration
 class CoroutineRequestActivity : BaseActivity(R.layout.activity_coroutine_request) {
     override val binding: ActivityCoroutineRequestBinding by viewBinding()
     private val viewModel by lazy {
-        CPhotosViewModel(PhotosRepository())
+        PhotosViewModel(PhotosRepository())
     }
 
     private lateinit var photoAdapter: PhotoAdapter

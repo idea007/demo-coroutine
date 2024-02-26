@@ -19,3 +19,4 @@ include ':apps:demo-rxjava-vs-coroutine'
 
 
 include ':lib-base'
+include ':apps:demo-koin'
