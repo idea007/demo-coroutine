@@ -6,7 +6,11 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import com.dafay.demo.lib.base.utils.println
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 
 /**
@@ -18,6 +22,80 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+    @Test
+    fun test_firstCoroutine() {
+        runBlocking {
+            launch(Dispatchers.IO) {
+                delay(1000L)
+                println("World!") // print after delay
+            }
+            println("Hello") // main coroutine continues while a previous one is delayed
+        }
+    }
+
+    @Test
+    fun test_async1() {
+        // 创建一个新的协程作用域
+        runBlocking {
+            println("before async...")
+            // 启动一个异步任务，返回一个 Deferred 对象
+            val deferredResult1: Deferred<Int> = async {
+                println("in async...")
+                delay(1000) // 模拟异步操作
+                return@async 42
+            }
+            val deferredResult2: Deferred<Int> = async {
+                println("in async...")
+                delay(2000) // 模拟异步操作
+                return@async 42
+            }
+            println("Do something while async task is running...")
+            deferredResult1.cancelAndJoin()
+            // 等待异步任务完成并获取结果
+//            val result1 = deferredResult1.await()
+            val result2 = deferredResult2.await()
+            println("Async task result: ${result2}")
+        }
+    }
+
+
+    @Test
+    fun test_async() {
+        // 创建一个新的协程作用域
+        runBlocking {
+            println("before async...")
+            // 启动一个异步任务，返回一个 Deferred 对象
+            val deferredResult: Deferred<Int> = async {
+                println("in async...")
+                delay(1000) // 模拟异步操作
+                return@async 42
+            }
+            println("Do something while async task is running...")
+            // 等待异步任务完成并获取结果
+            val result = deferredResult.await()
+            println("Async task result: $result")
+        }
+    }
+
+    @Test
+    fun test_launch() {
+        runBlocking(CoroutineName("RunBlocking Scope") + Dispatchers.Default) { // this: CoroutineScope
+            println("current scope is ${coroutineContext[CoroutineName]}")
+            launch() { // launch a new coroutine and continue
+                println("curret scope is ${coroutineContext[CoroutineName]}")
+                delay(1000L) // non-blocking delay for 1 second (default time unit is ms)
+                println("World!") // print after delay
+            }
+
+            launch {
+                println("curret scope is ${coroutineContext[CoroutineName]}")
+                delay(1000L)
+                println("Welcome To Coding World")
+            }
+            println("Hello") // main coroutine continues while a previous one is delayed
+        }
     }
 
     @Test
@@ -39,7 +117,7 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun test_job() {
+    fun test_job0() {
         runBlocking {
             //sampleStart
             val job = launch {
@@ -62,7 +140,7 @@ class ExampleUnitTest {
      * 协程的取消是 协作 的。一段协程代码必须协作才能被取消。 所有 kotlinx.coroutines 中的挂起函数都是 可被取消的 。它们检查协程的取消， 并在取消时抛出 CancellationException。 然而，如果协程正在执行计算任务，并且没有检查取消的话，那么它是不能被取消的
      */
     @Test
-    fun test_job2(){
+    fun test_job2() {
         runBlocking {
             // sampleStart
             val startTime = System.currentTimeMillis()
@@ -86,9 +164,9 @@ class ExampleUnitTest {
     }
 
     @Test
-    fun test_job3(){
+    fun test_job3() {
         runBlocking {
-        // sampleStart
+            // sampleStart
             val job = launch(Dispatchers.Default) {
                 repeat(5) { i ->
                     try {
@@ -105,7 +183,7 @@ class ExampleUnitTest {
             println("main: I'm tired of waiting!")
             job.cancelAndJoin() // cancels the job and waits for its completion
             println("main: Now I can quit.")
-        // sampleEnd
+            // sampleEnd
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.dafay.demo.lib.base.utils
 
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * 为日志添加统一的前缀
@@ -19,7 +21,7 @@ private fun findClassNameAndLine(): String? {
 }
 
 private fun appendPrefix(message: String): String {
-    return PREFIX + "[${Thread.currentThread().name}](${findClassNameAndLine()}) " + message
+    return PREFIX + "[${ SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault()).format(System.currentTimeMillis())}]"+"[${Thread.currentThread().name}](${findClassNameAndLine()}) " + message
 }
 
 fun Any.println(message: String) {
