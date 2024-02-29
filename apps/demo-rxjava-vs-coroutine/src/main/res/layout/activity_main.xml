@@ -32,5 +32,11 @@
         android:layout_width="match_parent"
         android:layout_height="80dp" />
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mb_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test 协程" />
+
 
 </LinearLayout>

@@ -16,7 +16,7 @@ dependencyResolutionManagement {
 rootProject.name = "demos"
 // apps
 include ':apps:demo-rxjava-vs-coroutine'
-
+include ':apps:demo-koin'
 
 include ':lib-base'
-include ':apps:demo-koin'
+

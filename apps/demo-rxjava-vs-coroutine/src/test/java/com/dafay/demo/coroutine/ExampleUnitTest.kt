@@ -10,8 +10,15 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.coroutines.ContinuationInterceptor
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -22,6 +29,197 @@ class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
         assertEquals(4, 2 + 2)
+    }
+
+
+    @Test
+    fun test_CoroutineContext() {
+        runBlocking(Dispatchers.Main){
+            val scope = CoroutineScope(Job() + Dispatchers.Main + CoroutineName("parent"))
+            println("-ContinuationInterceptor:" + scope.coroutineContext[ContinuationInterceptor])
+            println("-Job:" + scope.coroutineContext[Job])
+            println("-CoroutineName:" + scope.coroutineContext[CoroutineName])
+            val job = scope.launch(Dispatchers.IO) {
+                println("ContinuationInterceptor:" + this.coroutineContext[ContinuationInterceptor])
+                println("Job:" + this.coroutineContext[Job])
+                println("CoroutineName:" + this.coroutineContext[CoroutineName])
+                delay(1000) //
+                println("I'm sleeping  ...")
+            }
+            println("job:" + job)
+            job.join()
+            println("-ContinuationInterceptor:" + scope.coroutineContext[ContinuationInterceptor])
+            println("-Job:" + scope.coroutineContext[Job])
+            println("-CoroutineName:" + scope.coroutineContext[CoroutineName])
+        }
+    }
+
+
+    @Test
+    fun test_job_cancel7() {
+
+        var acquired = 0
+
+        class Resource {
+            init {
+                acquired++
+            } // Acquire the resource
+
+            fun close() {
+                acquired--
+            } // Release the resource
+        }
+
+        runBlocking {
+            repeat(10_000) { // Launch 10K coroutines
+                launch {
+                    val resource = withTimeout(60) { // Timeout of 60 ms
+                        delay(50) // Delay for 50 ms
+                        Resource() // Acquire a resource and return it from withTimeout block
+                    }
+                    resource.close() // Release the resource
+                }
+            }
+        }
+        // Outside of runBlocking all coroutines have completed
+        println("" + acquired) // Print the number of resources still acquired
+    }
+
+    @Test
+    fun test_job_cancel6() {
+        runBlocking {
+            val result = withTimeoutOrNull(1300L) {
+                repeat(1000) { i ->
+                    println("I'm sleeping $i ...")
+                    delay(500L)
+                }
+                "Done" // 在它运行得到结果之前取消它
+            }
+            println("Result is $result")
+        }
+    }
+
+    @Test
+    fun test_job_cancel5() {
+        runBlocking {
+            withTimeout(1300L) {
+                repeat(1000) { i ->
+                    println("I'm sleeping $i ...")
+                    delay(500L)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun test_job_cancel4() {
+        runBlocking {
+            val job = launch {
+                try {
+                    repeat(1000) { i ->
+                        println("job: I'm sleeping $i ...")
+                        delay(500L)
+                    }
+                } finally {
+                    withContext(NonCancellable) {
+                        println("job: I'm running finally")
+                        delay(1000L)
+                        println("job: And I've just delayed for 1 sec because I'm non-cancellable")
+                    }
+                }
+            }
+            delay(1300L) // 延迟一段时间
+            println("main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消该作业并等待它结束
+            println("main: Now I can quit.")
+        }
+    }
+
+    @Test
+    fun test_job_cancel3() {
+        runBlocking {
+            val job = launch {
+                try {
+                    repeat(1000) { i ->
+                        println("job: I'm sleeping $i ...")
+                        delay(500L)
+                    }
+                } finally {
+                    println("job: I'm running finally")
+                }
+            }
+            delay(1300L) // 延迟一段时间
+            println("main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消该作业并且等待它结束
+            println("main: Now I can quit.")
+        }
+    }
+
+    @Test
+    fun test_job_cancel2() {
+        runBlocking {
+            val startTime = System.currentTimeMillis()
+            val job = launch(Dispatchers.Default) {
+                var nextPrintTime = startTime
+                var i = 0
+                while (isActive) { // 可以被取消的计算循环
+                    // 每秒打印消息两次
+                    if (System.currentTimeMillis() >= nextPrintTime) {
+                        println("job: I'm sleeping ${i++} ...")
+                        nextPrintTime += 500L
+                    }
+                }
+            }
+            delay(1300L) // 等待一段时间
+            println("main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消该作业并等待它结束
+            println("main: Now I can quit.")
+        }
+    }
+
+    @Test
+    fun test_job_cancel1() {
+        runBlocking {
+            val startTime = System.currentTimeMillis()
+            val job = launch(Dispatchers.Default) {
+                repeat(5) { i ->
+                    try {
+                        // print a message twice a second
+                        println("job: I'm sleeping $i ...")
+                        delay(500)
+                    } catch (e: Exception) {
+                        // log the exception
+                        println(e)
+                    }
+                }
+            }
+            delay(1300L) // 等待一段时间
+            println("main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消一个作业并且等待它结束
+            println("main: Now I can quit.")
+        }
+    }
+
+    @Test
+    fun test_job_cancel() {
+        runBlocking {
+            val startTime = System.currentTimeMillis()
+            val job = launch(Dispatchers.Default) {
+                var nextPrintTime = startTime
+                var i = 0
+                while (i < 5) { // 一个执行计算的循环，只是为了占用 CPU
+                    // 每秒打印消息两次
+                    if (System.currentTimeMillis() >= nextPrintTime) {
+                        println("job: I'm sleeping ${i++} ...")
+                        nextPrintTime += 500L
+                    }
+                }
+            }
+            delay(1300L) // 等待一段时间
+            println("main: I'm tired of waiting!")
+            job.cancelAndJoin() // 取消一个作业并且等待它结束
+            println("main: Now I can quit.")
+        }
     }
 
     @Test
