@@ -34,7 +34,7 @@ class ExampleUnitTest {
 
     @Test
     fun test_CoroutineContext() {
-        runBlocking(Dispatchers.Main){
+        runBlocking(Dispatchers.Main) {
             val scope = CoroutineScope(Job() + Dispatchers.Main + CoroutineName("parent"))
             println("-ContinuationInterceptor:" + scope.coroutineContext[ContinuationInterceptor])
             println("-Job:" + scope.coroutineContext[Job])
@@ -382,6 +382,21 @@ class ExampleUnitTest {
             job.cancelAndJoin() // cancels the job and waits for its completion
             println("main: Now I can quit.")
             // sampleEnd
+        }
+    }
+
+
+    @Test
+    fun test_inherit() {
+        runBlocking {
+            val scope = CoroutineScope(Job() + Dispatchers.Default + CoroutineName("parent"))
+            println("Job:" + scope.coroutineContext[Job])
+            val job = scope.launch(Dispatchers.IO) {
+                println("Job:" + this.coroutineContext[Job])
+            }
+            val job1 = scope.launch {
+                println("Job:" + this.coroutineContext[Job])
+            }
         }
     }
 }
