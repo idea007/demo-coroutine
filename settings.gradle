@@ -13,7 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "demos"
+rootProject.name = "demo-coroutine"
 // apps
 include ':apps:demo-rxjava-vs-coroutine'
 include ':apps:demo-koin'
