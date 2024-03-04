@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="apps.demo-koin">
+        <State />
+      </entry>
       <entry key="apps.demo-rxjava-vs-coroutine">
         <State />
       </entry>

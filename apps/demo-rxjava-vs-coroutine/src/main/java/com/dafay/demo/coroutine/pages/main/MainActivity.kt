@@ -37,6 +37,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                 println("-ContinuationInterceptor:" + scope.coroutineContext[ContinuationInterceptor])
                 println("-Job:" + scope.coroutineContext[Job])
                 println("-CoroutineName:" + scope.coroutineContext[CoroutineName])
+                launch {
+                    println("Job:" + this.coroutineContext[Job])
+                }
                 val job = scope.launch(Dispatchers.IO) {
                     println("ContinuationInterceptor:" + this.coroutineContext[ContinuationInterceptor])
                     println("Job:" + this.coroutineContext[Job])
