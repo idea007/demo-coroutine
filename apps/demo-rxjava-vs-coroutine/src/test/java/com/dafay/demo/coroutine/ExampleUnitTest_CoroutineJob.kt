@@ -26,7 +26,8 @@ class ExampleUnitTest_CoroutineJob {
 
 
     /**
-     *当启动多个协程时，跟踪它们或单独取消每个协程可能会很痛苦。相反，我们可以依靠取消启动的整个范围协程，因为这将取消创建的所有子协程：
+     *当启动多个协程时，跟踪它们或单独取消每个协程可能会很痛苦。
+     * 相反，我们可以依靠取消启动的整个范围协程，因为这将取消创建的所有子协程：
      */
     @Test
     fun test_coroutineJob() {
@@ -91,7 +92,7 @@ class ExampleUnitTest_CoroutineJob {
     }
 
     /**
-     * 取消异常
+     * 取消会抛 CancellationException 异常
      */
     @Test
     fun test_coroutineCancel2() {
@@ -117,7 +118,7 @@ class ExampleUnitTest_CoroutineJob {
     }
 
     /**
-     * 取消异常
+     * async 启动的协程取消异常
      */
     @Test
     fun test_coroutineCancel3() {
@@ -139,50 +140,6 @@ class ExampleUnitTest_CoroutineJob {
             }
             delay(1300)
             deferredA.cancel(CancellationException("主动取消"))
-        }
-        Thread.sleep(5000)
-    }
-
-    /**
-     * 取消异常
-     */
-    @Test
-    fun test_coroutineCancel4() {
-        runBlocking {
-            val scope = CoroutineScope(Job() + Dispatchers.Default + CoroutineName("Parent"))
-            val jobA = scope.launch(CoroutineName("A")) {
-                println("A task start")
-                delay(1000)
-                println("A task end")
-            }
-            val jobB = scope.launch {
-                println("B task start")
-                delay(2000)
-                println("B task end")
-            }
-            scope.cancel()
-        }
-        Thread.sleep(5000)
-    }
-
-    /**
-     * 取消异常
-     */
-    @Test
-    fun test_coroutineCancel5() {
-        runBlocking {
-            val scope = CoroutineScope(Job() + Dispatchers.Default + CoroutineName("Parent"))
-            val jobA = scope.launch(CoroutineName("A")) {
-                println("A task start")
-                delay(1000)
-                println("A task end")
-            }
-            val jobB = scope.launch {
-                println("B task start")
-                delay(2000)
-                println("B task end")
-            }
-            jobA.cancel()
         }
         Thread.sleep(5000)
     }

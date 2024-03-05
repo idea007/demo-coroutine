@@ -31,6 +31,9 @@ class ExampleUnitTest_CoroutineInherited {
     }
 
 
+    /**
+     * 协程上下文继承关系
+     */
     @Test
     fun test_CoroutineContext() {
         val handler = CoroutineExceptionHandler { _, exception ->
